@@ -8,8 +8,8 @@ using Newtonsoft.Json;
 namespace FileIO_Back
 {
     /// DetectTimeHandler 提供所选轨交线路所有有采集数据的日期列表
-    /// success return: {"data":{"dates":["2020-4-11","2020-10-16"]}}
-    /// fail return: null
+    /// success: {"data":{"dates":["2020-4-11","2020-10-16"]}}
+    /// fail: null
     public class DetectTimeHandler : IHttpHandler
     {
         public class RootJson

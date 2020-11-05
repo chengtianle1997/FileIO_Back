@@ -4,16 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FileIO_Back
 {
-
-    /// DeviceHandler 提供所选轨交线路和日期对应的有采集数据的设备列表
-    /// success: {"data":{"devices":[{"deviceId":"1","name":"WYNTELLI-GJA001"}]}}
+    /// DetectRecordHandler 根据线路号和日期提供检测记录号及检测记录信息
+    /// success: {"data":{"records":[{"catchId":"1","deviceId":"1","totallength":"0","recordsCount":"0"}]}}
     /// fail: null
-
-    public class DeviceHandler : IHttpHandler
+    public class DetectRecordHandler : IHttpHandler
     {
         public class RootJson
         {
@@ -21,18 +18,23 @@ namespace FileIO_Back
         }
         public class DataJson
         {
-            public List<DevicesJson> devices;
+            public List<RecordsJson> records;
         }
-        public class DevicesJson
+        public class RecordsJson
         {
-            public string deviceId;
-            public string name;
-            public DevicesJson(string _deviceId, string _name)
+            public string catchId { set; get; }
+            public string deviceId { set; get; }
+            public string totallength { set; get; }
+            public string recordsCount { set; get; }
+            public RecordsJson(int _catchId, string _deviceId, float _totallength, int _recordsCount)
             {
+                catchId = _catchId.ToString();
                 deviceId = _deviceId;
-                name = _name;
+                totallength = _totallength.ToString("0.##");
+                recordsCount = _recordsCount.ToString();
             }
         }
+
         public void ProcessRequest(HttpContext context)
         {
             int lineId = 0;
@@ -43,7 +45,7 @@ namespace FileIO_Back
                 date = Convert.ToDateTime(context.Request.Params["date"].ToLower());
                 end_date = date.AddDays(1);
             }
-            catch(System.Exception)
+            catch (System.Exception)
             {
                 context.Response.Write(null);
                 context.Response.End();
@@ -64,37 +66,29 @@ namespace FileIO_Back
                 context.Response.End();
                 return;
             }
-            RootJson rootJson = new RootJson();
-            rootJson.data = new DataJson();
-            rootJson.data.devices = new List<DevicesJson>();
             if (detectRecords.Count < 1)
             {
                 context.Response.Write(null);
                 context.Response.End();
                 return;
             }
-            // 清除重复设备名
-            Dictionary<string, string> device_dict = new Dictionary<string, string>();
+            RootJson rootJson = new RootJson();
+            rootJson.data = new DataJson();
+            rootJson.data.records = new List<RecordsJson>();
             for (int i = 0; i < detectRecords.Count; i++)
             {
-                if (!device_dict.ContainsKey(detectRecords[i].DeviceID))
+                List<DataOverview> dataOverviews = new List<DataOverview>();
+                int recordsCount = 0;
+                try
                 {
-                    List<DetectDevice> detectDevices = new List<DetectDevice>();
-                    try
-                    {
-                        Database.QueryDetectDevice(ref detectDevices, detectRecords[i].DeviceID);
-                    }
-                    catch (System.Exception)
-                    {
-                        continue;
-                    }
-                    device_dict.Add(detectRecords[i].DeviceID, detectDevices[0].DetectDeviceName);
+                    Database.QueryDataOverview(ref dataOverviews, (int)(detectRecords[i].RecordID));
+                    recordsCount = dataOverviews.Count();
                 }
-            }
-            // 遍历非重复设备
-            foreach (string deviceId in device_dict.Keys)
-            {
-                rootJson.data.devices.Add(new DevicesJson(deviceId, device_dict[deviceId]));
+                catch(System.Exception)
+                {
+                    ;
+                }
+                rootJson.data.records.Add(new RecordsJson((int)detectRecords[i].RecordID, detectRecords[i].DeviceID, detectRecords[i].Length, recordsCount));
             }
             string rootJsonStr = JsonConvert.SerializeObject(rootJson);
             context.Response.Write(rootJsonStr);

@@ -29,8 +29,8 @@ namespace FileIO_Back
     }
 
     /// LineHandler 提供轨交线路的数据
-    /// success return: {"data":{"lines":[{"lineId":"1","name":"苏州地铁一号线"}]}}
-    /// fail return: null
+    /// success: {"data":{"lines":[{"lineId":"1","name":"苏州地铁一号线"}]}}
+    /// fail: null
     public class LineHandler : IHttpHandler
     {
         public void ProcessRequest(HttpContext context)

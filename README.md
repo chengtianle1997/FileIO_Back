@@ -26,9 +26,9 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 1.  **轨交线路接口**
 
-\*\*接口文件：\*\*LineHandler.ashx，LineHandler.ashx.cs
+**接口文件：**LineHandler.ashx，LineHandler.ashx.cs
 
-\*\*说明：\*\*提供轨交线路的数据
+**说明：**提供轨交线路的数据
 
 **返回数据:**
 
@@ -52,15 +52,15 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 1.  **检测时间接口**
 
-\*\*接口文件：\*\*DetectTimeHandler.ashx, DetectTimeHandler.ashx.cs
+**接口文件：**DetectTimeHandler.ashx, DetectTimeHandler.ashx.cs
 
-\*\*说明：\*\*提供所选轨交线路所有有采集数据的日期列表
+**说明：**提供所选轨交线路所有有采集数据的日期列表
 
 **输入参数：**
 
 {
 
->   lineId:1
+>   lineId:1 //线路编号
 
 }
 
@@ -86,17 +86,17 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 1.  **设备接口**
 
-\*\*接口文件：\*\*DeviceHandler.ashx, DeviceHandler.ashx.cs
+**接口文件：**DeviceHandler.ashx, DeviceHandler.ashx.cs
 
-\*\*说明：\*\*提供所选轨交线路和日期对应的有采集数据的设备列表
+**说明：**提供所选轨交线路和日期对应的有采集数据的设备列表
 
 **输入参数：**
 
 {
 
->   lineId:1,
+>   lineId:1, //线路编号
 
->   date:’ 2019-09-22’
+>   date:’ 2019-09-22’ //检测日期
 
 }
 
@@ -120,154 +120,215 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 **fail:** null
 
-1.  检测数据接口
+1.  **检测记录接口**
 
-    说明：根据设备号和日期提供采集的数据
+**接口文件：**DetectRecordHandler.ashx, DetectRecordHandler.ashx.cs
 
-    接口参数json：
+**说明：**根据线路号和日期提供检测记录号及检测记录信息
 
-    {
+**输入参数：**
 
-    deviceId:1,
+{
 
-    date:’ 2019-09-22’
+lineId:1,//线路编号
 
-    }
+>   date:’2019-09-22’ //检测日期
 
-    返回数据json：
+}
 
-    {
+**返回数据：**
 
-    data:{
+**success:**
 
-    catchId:1,//采集数据编号
+{
 
-    totallength:15000,//隧道总长度
+data:{
 
-    recordsCount:1500,//采集数据的条数
+records:[
 
-    records:[//具体各个距离检测点的数据，包括长轴，水平轴，短轴，短轴仰角，是否有收敛，是否有裂缝
+>   {catchId:1,deviceId:1,totallength:15000,recordsCount:150000},
 
-    {id:1,distance:100,longAxis:25,horizontalAxis:23,shortAxis:12,shortAxisAngle:30,hasConstr:0,hasCrack:0},
-    {id:2,distance:200,longAxis:26,horizontalAxis:24,shortAxis:13,shortAxisAngle:32,hasConstr:0,hasCrack:1},
+>   {catchId:2,deviceId:1,totallength:26000,recordsCount:350000},
 
-    {id:3,distance:300,longAxis:25,horizontalAxis:23,shortAxis:12,shortAxisAngle:30,hasConstr:1,hasCrack:0},
+>   ]
 
-    …
+}
 
-    ]
+}
 
-    }
+**fail:** null
 
-    }
+1.  **检测数据接口**
 
-2.  二维三维显示数据接口
+**接口文件：**DetectDataHandler.ashx, DetectDataHandler.ashx.cs
 
-    说明：通过给定的采集数据编号提供整条隧道的采集数据，二维坐标系x横轴z纵轴，三维坐标系x横轴z纵轴y距离，正常点蓝色显示，病害点红色显示。(或者通过给定的距离或者距离编号提供相应的采集数据)。由于数据数量较多，建议在后台时就就按照前台要求的数据格式进行封装，这样前台接收数据后不用再次遍历所有记录进行二次加工处理，便于前台加载和显示，提高客户界面友好性。
+**说明：**根据线路号和日期提供采集的数据
 
-    接口参数json：
+**输入参数：**
 
-    {
+{
 
-    catchId:1
+catchId:1, //采集数据编号
 
-    }
+>   queryStart:0, //待查询数据起始行
 
-    返回数据json：
+>   queryNum:500 //待查询数据条数
 
-    {
+}
 
-    data:{
+**返回数据：**
 
-    recordsCount:1500,//采集数据点的记录条数
+**success:**
 
-    records:[//具体各个距离检测点的数据
+{
 
-    {dpNo:1,value:[x,y,z],itemStyle:{color:’blue’}},//
-    dpNo是管片号，value是三维坐标，x是轨道方向径坐标，y是水平方向横坐标，z是垂直方向纵坐标
+>   data:{
 
-    { dpNo:1,value:[x,y,z],itemStyle:{color:’blue’}},
+>   records:[
 
-    { dpNo:2,value:[x,y,z],itemStyle:{color:’red}},
+>   //各个距离检测点的数据，包括长轴，水平轴，短轴，短轴仰角，是否收敛，是否裂缝
 
-    …
+>   {id:1,distance:100,longAxis:25,horizontalAxis:23,shortAxis:12,shortAxisAngle:30,hasConstr:0,hasCrack:0},
+>   {id:2,distance:200,longAxis:26,horizontalAxis:24,shortAxis:13,shortAxisAngle:32,hasConstr:0,hasCrack:1},
 
-    ]
+>   {id:3,distance:300,longAxis:25,horizontalAxis:23,shortAxis:12,shortAxisAngle:30,hasConstr:1,hasCrack:0},
 
-    }
+>   …
 
-    }
+>   ]
 
-3.  收敛点数据接口
+>   }
 
-    说明：给距离控件提供收敛数据
+}
 
-    接口参数json：
+**fail:** null
 
-    {
+1.  **二维三维显示数据接口**
 
-    catchId:1
+**接口文件：**DisplayDataHandler.ashx, DisplayDataHandler.ashx.cs
 
-    }
+**说明：**通过给定的采集数据编号提供整条隧道的采集数据，二维坐标系x横轴z纵轴，三维坐标系x横轴z纵轴y距离，正常点蓝色显示，病害点红色显示。(或者通过给定的距离或者距离编号提供相应的采集数据)。由于数据数量较多，在后台时就就对数据格式进行封装，前台接收数据后不再进行二次加工处理，便于前台加载和显示，提高客户界面友好性。
 
-    返回数据json：
+**输入参数：**
 
-    {
+{
 
-    data:{
+>   catchId:1,
 
-    recordsCount:1500,//收敛点数据的条数
+>   queryStart:0, //待查询数据起始行
 
-    records:[//具体各个收敛点的距离数据
+>   queryNum:500 //待查询数据条数
 
-    { dpNo:3,distance:100},
+}
 
-    { dpNo:12,distance:230},
+**返回数据：**
 
-    { dpNo:46,distance:503},
+**success:**
 
-    …
+{
 
-    ]
+>   data:{
 
-    }
+>   records:[//具体各个距离检测点的数据
 
-    }
+>   {dpNo:1,value:[x,y,z],itemStyle:{color:’blue’}},
 
-4.  裂缝点数据接口
+>   { dpNo:1,value:[x,y,z],itemStyle:{color:’blue’}},
 
-    说明：给距离控件提供裂缝数据
+>   { dpNo:2,value:[x,y,z],itemStyle:{color:’red}},
 
-    接口参数json：
+>   …
 
-    {
+>   **注：dpNo是里程位置，value是三维坐标，x是轨道方向径坐标（里程位置），y是水平方向横坐标，z是垂直方向纵坐标**
 
-    catchId:1
+>   ]
 
-    }
+>   }
 
-    返回数据json：
+}
 
-    {
+**fail:** null
 
-    data:{
+1.  **收敛点数据接口**
 
-    recordsCount:1500,//裂缝点数据的条数
+**接口文件：**ConstrictLocHandler.ashx, ConstrictLocHandler.ashx.cs
 
-    records:[//具体各个裂缝点的距离数据
+**说明：**给距离控件提供收敛数据
 
-    { dpNo:3,distance:100},
+**输入参数：**
 
-    { dpNo:12,distance:230},
+{
 
-    { dpNo:46,distance:503},
+>   catchId:1
 
-    …
+}
 
-    ]
+**返回数据：**
 
-    }
+**success:**
 
-    }
+{
 
-5.  预留
+>   data:{
+
+>   recordsCount:1500,//收敛点数据的条数
+
+>   records:[//具体各个收敛点的距离数据
+
+>   { dpNo:3,distance:100},
+
+>   { dpNo:12,distance:230},
+
+>   { dpNo:46,distance:503},
+
+>   …
+
+>   ]
+
+>   }
+
+}
+
+**fail:** null
+
+1.  **裂缝点数据接口**
+
+**接口文件：**CrackLocHandler.ashx, CrackLocHandler.ashx.cs
+
+**说明：**给距离控件提供裂缝数据
+
+**输入参数：**
+
+{
+
+>   catchId:1
+
+}
+
+**返回数据：**
+
+**success:**
+
+{
+
+>   data:{
+
+>   recordsCount:1500,//裂缝点数据的条数
+
+>   records:[//具体各个裂缝点的距离数据
+
+>   { dpNo:3,distance:100},
+
+>   { dpNo:12,distance:230},
+
+>   { dpNo:46,distance:503},
+
+>   …
+
+>   ]
+
+>   }
+
+}
+
+**fail:** null

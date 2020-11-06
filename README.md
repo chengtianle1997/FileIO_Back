@@ -24,7 +24,7 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 ### [接口说明]
 
-1.  **轨交线路接口**
+### 1. 轨交线路接口 
 
 **接口文件：**LineHandler.ashx，LineHandler.ashx.cs
 
@@ -50,7 +50,7 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 **fail:** null
 
-1.  **检测时间接口**
+### 2. 检测时间接口
 
 **接口文件：**DetectTimeHandler.ashx, DetectTimeHandler.ashx.cs
 
@@ -84,7 +84,7 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 **fail:** null
 
-1.  **设备接口**
+### 3. 设备接口
 
 **接口文件：**DeviceHandler.ashx, DeviceHandler.ashx.cs
 
@@ -120,7 +120,7 @@ VS2019/VS2017 工具 \>\> NuGet包管理器 \>\> 程序包管理器控制台
 
 **fail:** null
 
-1.  **检测记录接口**
+### 4. 检测记录接口
 
 **接口文件：**DetectRecordHandler.ashx, DetectRecordHandler.ashx.cs
 
@@ -158,21 +158,21 @@ records:[
 
 **fail:** null
 
-1.  **检测数据接口**
+### 5. 检测数据接口
 
 **接口文件：**DetectDataHandler.ashx, DetectDataHandler.ashx.cs
 
-**说明：**根据线路号和日期提供采集的数据
+**说明：**根据数据组编号提供采集的数据
 
 **输入参数：**
 
 {
 
-catchId:1, //采集数据编号
+catchId:1, //数据组编号
 
 >   queryStart:0, //待查询数据起始行
 
->   queryNum:500 //待查询数据条数
+>   queryNum:500 //待查询数据条数（为保证运行性能，建议单次查询不超过1000条）
 
 }
 
@@ -203,7 +203,7 @@ catchId:1, //采集数据编号
 
 **fail:** null
 
-1.  **二维三维显示数据接口**
+### 6. 二维三维显示数据接口
 
 **接口文件：**DisplayDataHandler.ashx, DisplayDataHandler.ashx.cs
 
@@ -217,7 +217,7 @@ catchId:1, //采集数据编号
 
 >   queryStart:0, //待查询数据起始行
 
->   queryNum:500 //待查询数据条数
+>   queryNum:500 //待查询数据条数（为保证运行性能，建议单次查询不超过1000条）
 
 }
 
@@ -249,7 +249,7 @@ catchId:1, //采集数据编号
 
 **fail:** null
 
-1.  **收敛点数据接口**
+### 7. 收敛点数据接口
 
 **接口文件：**ConstrictLocHandler.ashx, ConstrictLocHandler.ashx.cs
 
@@ -261,6 +261,10 @@ catchId:1, //采集数据编号
 
 >   catchId:1
 
+>   queryStart:0, //待查询数据起始行
+
+>   queryNum:500 //待查询数据条数（为保证运行性能，建议单次查询不超过1000条）
+
 }
 
 **返回数据：**
@@ -271,9 +275,9 @@ catchId:1, //采集数据编号
 
 >   data:{
 
->   recordsCount:1500,//收敛点数据的条数
+>   recordsCount:50,//收敛点数据的条数
 
->   records:[//具体各个收敛点的距离数据
+>   records:[
 
 >   { dpNo:3,distance:100},
 
@@ -281,7 +285,9 @@ catchId:1, //采集数据编号
 
 >   { dpNo:46,distance:503},
 
->   …
+>   //具体各个收敛点的距离数据，目前无法识别管片，
+
+>   dpNo和distance均为里程位置
 
 >   ]
 
@@ -291,7 +297,7 @@ catchId:1, //采集数据编号
 
 **fail:** null
 
-1.  **裂缝点数据接口**
+### 8. 裂缝点数据接口
 
 **接口文件：**CrackLocHandler.ashx, CrackLocHandler.ashx.cs
 
@@ -303,6 +309,10 @@ catchId:1, //采集数据编号
 
 >   catchId:1
 
+>   queryStart:0, //待查询数据起始行
+
+>   queryNum:500 //待查询数据条数（为保证运行性能，建议单次查询不超过1000条）
+
 }
 
 **返回数据：**
@@ -313,9 +323,9 @@ catchId:1, //采集数据编号
 
 >   data:{
 
->   recordsCount:1500,//裂缝点数据的条数
+>   recordsCount:15,//裂缝点数据的条数
 
->   records:[//具体各个裂缝点的距离数据
+>   records:[
 
 >   { dpNo:3,distance:100},
 
@@ -323,7 +333,7 @@ catchId:1, //采集数据编号
 
 >   { dpNo:46,distance:503},
 
->   …
+>   //具体各个裂缝点的距离数据
 
 >   ]
 

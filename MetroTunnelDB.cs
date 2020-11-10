@@ -169,13 +169,13 @@ namespace libMetroTunnelDB
     public class DataConv
     {
         public int RecordID;
-        public float Distance;
+        public double Distance;
         public float[] s;
         public float[] a;
 
         public const int floatArrLength = 2048 * 8;
 
-        public DataConv(int _RecordID, float _Distance, float[] _s, float[] _a)
+        public DataConv(int _RecordID, double _Distance, float[] _s, float[] _a)
         {
             RecordID = _RecordID;
             Distance = _Distance;
@@ -185,7 +185,7 @@ namespace libMetroTunnelDB
             Array.Copy(_a, 0, a, 0, floatArrLength);
         }
 
-        public DataConv(int _RecordID, float _Distance)
+        public DataConv(int _RecordID, double _Distance)
         {
             RecordID = _RecordID;
             Distance = _Distance;
@@ -197,10 +197,10 @@ namespace libMetroTunnelDB
     public class DataDisp
     {
         public int RecordID;
-        public float Distance;
+        public double Distance;
         public String JsonString;
 
-        public DataDisp(int _RecordID, float _Distance, String _JsonString)
+        public DataDisp(int _RecordID, double _Distance, String _JsonString)
         {
             RecordID = _RecordID;
             Distance = _Distance;
@@ -212,9 +212,9 @@ namespace libMetroTunnelDB
     {
         public int RecordID;
         public int TimeStamp;
-        public float Distance;
+        public double Distance;
 
-        public TandD(int _RecordID, int _TimeStamp, float _Distance)
+        public TandD(int _RecordID, int _TimeStamp, double _Distance)
         {
             RecordID = _RecordID;
             TimeStamp = _TimeStamp;
@@ -254,12 +254,12 @@ namespace libMetroTunnelDB
     public class ImageDisp
     {
         public int RecordID;
-        public float Distance;
+        public double Distance;
         public String[] FileUrl;
 
         public const int StringArrLength = 8;
 
-        public ImageDisp(int _RecordID, float _Distance, String[] _FileUrl)
+        public ImageDisp(int _RecordID, double _Distance, String[] _FileUrl)
         {
             RecordID = _RecordID;
             Distance = _Distance;
@@ -268,7 +268,7 @@ namespace libMetroTunnelDB
                 FileUrl[i] = _FileUrl[i];
         }
 
-        public ImageDisp(int _RecordID, float _Distance)
+        public ImageDisp(int _RecordID, double _Distance)
         {
             RecordID = _RecordID;
             Distance = _Distance;
@@ -287,7 +287,7 @@ namespace libMetroTunnelDB
         public int RecordID;
         public int CameraID;
         public int TimeStamp;
-        public float Distance;
+        public double Distance;
         public float[] x;
         public float[] y;
         public float[] s;
@@ -863,7 +863,7 @@ namespace libMetroTunnelDB
             DataConv entry = new DataConv
             (
                 reader.GetInt32("RecordID"),
-                reader.GetFloat("Distance"),
+                reader.GetDouble("Distance"),
                 DataEntry.ByteArr2FloatArr(s),
                 DataEntry.ByteArr2FloatArr(a)
             );
@@ -875,7 +875,7 @@ namespace libMetroTunnelDB
             DataDisp entry = new DataDisp
             (
                 reader.GetInt32("RecordID"),
-                reader.GetFloat("Distance"),
+                reader.GetDouble("Distance"),
                 reader.GetString("JsonString")
             );
             return entry;
@@ -887,7 +887,7 @@ namespace libMetroTunnelDB
             (
                 reader.GetInt32("RecordID"),
                 reader.GetInt32("TimeStamp"),
-                reader.GetFloat("Distance")
+                reader.GetDouble("Distance")
             );
             return entry;
         }
@@ -912,7 +912,7 @@ namespace libMetroTunnelDB
             ImageDisp entry = new ImageDisp
             (
                 reader.GetInt32("RecordID"),
-                reader.GetFloat("Distance"),
+                reader.GetDouble("Distance"),
                 arr
             );
             return entry;
@@ -1084,7 +1084,7 @@ namespace libMetroTunnelDB
             DoDelete(deleteDetectRecordStr);
         }
 
-        public void QueryDataOverview(ref List<DataOverview> arr, int RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataOverview(ref List<DataOverview> arr, int RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataOverview WHERE RecordID={0} AND Distance>={1} AND Distance<={2}";
             String queryStr = String.Format(formatStr, RecordID, min_Distance, max_Distance);
@@ -1098,7 +1098,7 @@ namespace libMetroTunnelDB
             DoQuery(queryStr, ref arr, ReadDataOverview);
         }
 
-        public void QueryDataOverview(ref List<DataOverview> arr, int min_RecordID, int max_RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataOverview(ref List<DataOverview> arr, int min_RecordID, int max_RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataOverview WHERE RecordID>={0} AND RecordID<={1} AND Distance>={2} AND Distance<={3}";
             String queryStr = String.Format(formatStr, min_RecordID, max_RecordID, min_Distance, max_Distance);
@@ -1118,21 +1118,21 @@ namespace libMetroTunnelDB
             DoQuery(queryStr, ref arr, ReadDataRaw);
         }
 
-        public void QueryDataConv(ref List<DataConv> arr, int RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataConv(ref List<DataConv> arr, int RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataConv WHERE RecordID={0} AND Distance>={1} AND Distance<={2}";
             String queryStr = String.Format(formatStr, RecordID, min_Distance, max_Distance);
             DoQuery(queryStr, ref arr, ReadDataConv);
         }
 
-        public void QueryDataConv(ref List<DataConv> arr, int min_RecordID, int max_RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataConv(ref List<DataConv> arr, int min_RecordID, int max_RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataConv WHERE RecordID>={0} AND RecordID<{1} AND Distance>={2} AND Distance<={3}";
             String queryStr = String.Format(formatStr, min_RecordID, max_RecordID, min_Distance, max_Distance);
             DoQuery(queryStr, ref arr, ReadDataConv);
         }
 
-        public void QueryDataConv(ref List<DataConv> arr, int RecordID, int QueryFrom, int maxQuery, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataConv(ref List<DataConv> arr, int RecordID, int QueryFrom, int maxQuery, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataConv WHERE RecordID={0} AND Distance>={1} AND Distance<={2} LIMIT {3},{4}";
             String queryStr = String.Format(formatStr, RecordID, min_Distance, max_Distance, QueryFrom, maxQuery);
@@ -1140,7 +1140,7 @@ namespace libMetroTunnelDB
         }
 
 
-        public void QueryDataDisp(ref List<DataDisp> arr, int RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataDisp(ref List<DataDisp> arr, int RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataDisp WHERE RecordID={0} AND Distance>={1} AND Distance<={2}";
             String queryStr = String.Format(formatStr, RecordID, min_Distance, max_Distance);
@@ -1154,7 +1154,7 @@ namespace libMetroTunnelDB
             DoQuery(queryStr, ref arr, ReadDataDisp);
         }
 
-        public void QueryDataDisp(ref List<DataDisp> arr, int min_RecordID, int max_RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryDataDisp(ref List<DataDisp> arr, int min_RecordID, int max_RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM DataDisp WHERE RecordID>={0} AND RecordID<={1} AND Distance>={2} AND Distance<={3}";
             String queryStr = String.Format(formatStr, min_RecordID, max_RecordID, min_Distance, max_Distance);
@@ -1189,7 +1189,7 @@ namespace libMetroTunnelDB
             DoQuery(queryStr, ref arr, ReadImageRaw);
         }
 
-        public void QueryImageDisp(ref List<ImageDisp> arr, int RecordID, float min_Distance = 0, float max_Distance = float.MaxValue)
+        public void QueryImageDisp(ref List<ImageDisp> arr, int RecordID, double min_Distance = 0, double max_Distance = double.MaxValue)
         {
             String formatStr = "SELECT * FROM ImageDisp WHERE RecordID={0} AND Distance>={1} AND Distance<={2}";
             String queryStr = String.Format(formatStr, RecordID, min_Distance, max_Distance);
